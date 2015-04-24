@@ -91,7 +91,7 @@
             this.SelectedProfile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SelectedProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.SelectedProfile.FormattingEnabled = true;
-            this.SelectedProfile.Location = new System.Drawing.Point(540, 561);
+            this.SelectedProfile.Location = new System.Drawing.Point(540, 560);
             this.SelectedProfile.Name = "SelectedProfile";
             this.SelectedProfile.Size = new System.Drawing.Size(168, 21);
             this.SelectedProfile.TabIndex = 1;
@@ -100,6 +100,7 @@
             // launchButton
             // 
             this.launchButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.launchButton.Enabled = false;
             this.launchButton.Location = new System.Drawing.Point(714, 559);
             this.launchButton.Name = "launchButton";
             this.launchButton.Size = new System.Drawing.Size(75, 23);

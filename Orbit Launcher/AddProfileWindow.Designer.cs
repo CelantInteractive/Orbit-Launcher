@@ -38,21 +38,24 @@
             // 
             // emailBox
             // 
-            this.emailBox.Location = new System.Drawing.Point(16, 25);
+            this.emailBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.emailBox.Location = new System.Drawing.Point(75, 25);
             this.emailBox.Name = "emailBox";
-            this.emailBox.Size = new System.Drawing.Size(194, 20);
+            this.emailBox.Size = new System.Drawing.Size(242, 20);
             this.emailBox.TabIndex = 0;
             // 
             // passwordBox
             // 
-            this.passwordBox.Location = new System.Drawing.Point(16, 77);
+            this.passwordBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.passwordBox.Location = new System.Drawing.Point(75, 77);
             this.passwordBox.Name = "passwordBox";
-            this.passwordBox.Size = new System.Drawing.Size(194, 20);
+            this.passwordBox.Size = new System.Drawing.Size(242, 20);
             this.passwordBox.TabIndex = 1;
             // 
             // addProfileButton
             // 
-            this.addProfileButton.Location = new System.Drawing.Point(135, 134);
+            this.addProfileButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.addProfileButton.Location = new System.Drawing.Point(301, 117);
             this.addProfileButton.Name = "addProfileButton";
             this.addProfileButton.Size = new System.Drawing.Size(75, 23);
             this.addProfileButton.TabIndex = 2;
@@ -62,7 +65,8 @@
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(12, 134);
+            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cancelButton.Location = new System.Drawing.Point(12, 117);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 3;
@@ -72,8 +76,9 @@
             // 
             // emailLabel
             // 
+            this.emailLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.emailLabel.AutoSize = true;
-            this.emailLabel.Location = new System.Drawing.Point(13, 9);
+            this.emailLabel.Location = new System.Drawing.Point(72, 9);
             this.emailLabel.Name = "emailLabel";
             this.emailLabel.Size = new System.Drawing.Size(35, 13);
             this.emailLabel.TabIndex = 4;
@@ -81,8 +86,9 @@
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 61);
+            this.label1.Location = new System.Drawing.Point(72, 61);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 13);
             this.label1.TabIndex = 5;
@@ -92,7 +98,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(222, 169);
+            this.ClientSize = new System.Drawing.Size(388, 152);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.emailLabel);
             this.Controls.Add(this.cancelButton);

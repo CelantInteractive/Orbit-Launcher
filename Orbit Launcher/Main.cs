@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -35,6 +36,8 @@ namespace OrbitLauncher
             Console.SetOut(logger);
             Console.WriteLine("Initializing launcher");
 
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
             InitializeComponent();
 
             AuthManager = new AuthManager(this);
@@ -44,6 +47,16 @@ namespace OrbitLauncher
 
             Starting = false;
             Console.WriteLine("Initialised");
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Console.WriteLine(@"------------------------------------------------------------");
+            Console.WriteLine(@"THE APPLICATION HAS CRASHED! CRASH REPORT BELOW!");
+            Console.WriteLine(@"------------------------------------------------------------");
+            Console.WriteLine(e.ExceptionObject);
+            MessageBox.Show("The launcher has unexpectedly crashed! A crash report has been placed in the log", "Unhandled Error");
+            Process.GetCurrentProcess().Kill();
         }
 
         public void AddProfile(String username, String password)
@@ -75,8 +88,15 @@ namespace OrbitLauncher
                 SelectedProfile.Items.Add(Profile.Value.Email);
             }
             SelectedProfile.Items.Add("Add new profile");
-
-            SelectedProfile.Text = "Add new profile";
+            SelectedProfile.SelectedIndex = 0;
+            if (SelectedProfile.SelectedItem.Equals("Add new profile"))
+            {
+                launchButton.Enabled = false;
+            }
+            else
+            {
+                launchButton.Enabled = true;
+            }
         }
 
         private void selectedProfile_SelectionChangeCommited(object sender, EventArgs e)
@@ -85,7 +105,11 @@ namespace OrbitLauncher
             {
                 AddProfileWindow addProfileWindow = new AddProfileWindow(this);
                 addProfileWindow.ShowDialog();
-
+                launchButton.Enabled = false;
+            }
+            else
+            {
+                launchButton.Enabled = true;
             }
         }
 

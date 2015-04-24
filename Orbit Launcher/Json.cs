@@ -29,10 +29,9 @@ namespace OrbitLauncher
         public static AuthenticationFile RetrieveAuthenticationData()
         {
             AuthenticationFile AuthFile = new AuthenticationFile();
+            var AuthenticationFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Lib.AUTHENTICATION_FILE_LOCATION); // Location of Authentication file
             try
             {
-                var AuthenticationFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Lib.AUTHENTICATION_FILE_LOCATION); // Location of Authentication file
-
                 if (!File.Exists(AuthenticationFilePath))
                 {
                     Console.WriteLine("No authentication file found. Creating.");
@@ -47,9 +46,9 @@ namespace OrbitLauncher
                 AuthFile = JsonConvert.DeserializeObject<AuthenticationFile>(FileContents);
                 
             }
-            catch (Exception e)
+            catch (JsonSerializationException)
             {
-                Console.WriteLine(e.Message);
+                File.Delete(AuthenticationFilePath);
             }
 
             return AuthFile;
