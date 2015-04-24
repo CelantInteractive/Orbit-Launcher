@@ -23,38 +23,31 @@ namespace OrbitLauncher
     {
         public AuthenticationFile AuthenticationDb;
 
+        Main Parent;
+
+        public AuthManager(Main parent)
+        {
+            this.Parent = parent;
+        }
+
         /// <summary>
         /// Return all profiles from the authentication file
         /// </summary>
         /// <returns>List of profiles</returns>
-        public List<Profile> GetProfiles()
+        public Dictionary<String,Profile> GetProfiles()
         {
-            var AuthenticationFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Lib.AUTHENTICATION_FILE_LOCATION); // Location of Authentication file
-            
-            if (!File.Exists(AuthenticationFilePath))
-            {
-                Console.WriteLine("No authentication file found. Creating.");
-                AuthenticationFile NewAuthenticationFile = new AuthenticationFile();
-                NewAuthenticationFile.Profiles = new List<Profile>();
-
-                Json.CreateNewAuthenticationFile(AuthenticationFilePath, NewAuthenticationFile);
-            }
-
-            String FileContents = File.ReadAllText(AuthenticationFilePath);
-
-            AuthenticationDb = JsonConvert.DeserializeObject<AuthenticationFile>(FileContents);
+            AuthenticationDb = Json.RetrieveAuthenticationData();
 
             return AuthenticationDb.Profiles;
         }
 
-        private void AddNewProfile(string username, string accessToken, string UUID)
+        private void AddNewProfile(string email, string accessToken, string cardinalId)
         {
             Profile profile = new Profile();
-            profile.Username = username;
-            profile.UUID = UUID;
+            profile.Email = email;
             profile.AccessToken = accessToken;
 
-            AuthenticationDb.Profiles.Add(profile);
+            AuthenticationDb.Profiles.Add(cardinalId,profile);
             UpdateAuthenticationFile();
         }
 
@@ -65,34 +58,58 @@ namespace OrbitLauncher
             Json.WriteAuthenticationToFile(AuthenticationFilePath, this.AuthenticationDb);
         }
 
-        public void AuthenticateNewProfile(string username, string password)
+        public async void AuthenticateNewProfile(string email, string password)
         {
-            foreach (Profile profile in AuthenticationDb.Profiles)
+            ResponseLogin response = new ResponseLogin();
+            try
             {
-                if (profile.Username.Equals(username))
+
+                foreach (KeyValuePair<String, Profile> profile in AuthenticationDb.Profiles)
                 {
-                    MessageBox.Show("This user is already in the profiles list");
+                    if (profile.Value.Email.Equals(email))
+                    {
+                        MessageBox.Show("This user is already in the profiles list");
+                        return;
+                    }
                 }
+
+                Dictionary<string, string> Data = new Dictionary<string, string>()
+                {
+                    {"email", email},
+                    {"password", password},
+                    {"clientToken", AuthenticationDb.ClientToken}
+                };
+                var client = new RestClient();
+
+                string json = await client.MakeRequestAsync(Lib.API_LOGIN, Data);
+
+                response = JsonConvert.DeserializeObject<ResponseLogin>(json);
+
             }
-            var FrameLogin = new FrameLogin(username, password, "");
-
-            string Data = JsonConvert.SerializeObject(FrameLogin, Formatting.None);
-            var client = new RestClient(@"https://localhost:8443/Authentication/login", HttpVerb.POST, Data);
-
-            var json = client.MakeRequest();
-
-            ResponseLogin response = JsonConvert.DeserializeObject<ResponseLogin>(json);
-
-            if (response != null)
+            catch (Exception e)
             {
-                if (response.statusCode.Equals("0x0"))
+                Console.WriteLine(e.Message);
+            }
+
+            if (response != null & !response.Equals(""))
+            {
+                if (response.statusCode.Equals(StatusCode.OK))
                 {
                     AuthenticationDb.ClientToken = response.clientToken;
-                    AddNewProfile(response.username, response.accessToken, response.UUID);
+                    AddNewProfile(email, response.accessToken, response.cardinalId);
+                    Parent.RefreshProfileList();
                 }
                 else
                 {
-                    MessageBox.Show(response.statusMessage, response.statusCode);
+                    if (response.statusCode.Equals(StatusCode.INVALID_CREDENTIALS))
+                    {
+                        MessageBox.Show("Invalid email/password combination");
+                    }
+                    else
+                    {
+                        MessageBox.Show("An internal error occured.\n Please wait and try again, and if you still cannot log in, contact customer support with Unique Support Code: " + response.uniqueSupport);
+                    }
+                    
                 }
             }
         }

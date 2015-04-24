@@ -25,5 +25,34 @@ namespace OrbitLauncher
             string Json = JsonConvert.SerializeObject(authFile, Formatting.Indented);
             File.WriteAllText(filePath, Json);
         }
+
+        public static AuthenticationFile RetrieveAuthenticationData()
+        {
+            AuthenticationFile AuthFile = new AuthenticationFile();
+            try
+            {
+                var AuthenticationFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Lib.AUTHENTICATION_FILE_LOCATION); // Location of Authentication file
+
+                if (!File.Exists(AuthenticationFilePath))
+                {
+                    Console.WriteLine("No authentication file found. Creating.");
+                    AuthenticationFile NewAuthenticationFile = new AuthenticationFile();
+                    NewAuthenticationFile.Profiles = new Dictionary<String, Profile>();
+
+                    Json.CreateNewAuthenticationFile(AuthenticationFilePath, NewAuthenticationFile);
+                }
+
+                String FileContents = File.ReadAllText(AuthenticationFilePath);
+
+                AuthFile = JsonConvert.DeserializeObject<AuthenticationFile>(FileContents);
+                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return AuthFile;
+        }
     }
 }

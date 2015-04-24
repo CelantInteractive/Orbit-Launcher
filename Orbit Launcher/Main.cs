@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Controls;
 using System.Runtime.InteropServices;
 using OrbitLauncher.Authentication;
 
@@ -23,42 +24,31 @@ namespace OrbitLauncher
         [DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
 
-        AuthManager AuthManager = new AuthManager();
+        public static bool Starting = true;
+
+        public static Logger logger = new Logger();
+
+        AuthManager AuthManager;
 
         public Main()
         {
-            Console.SetOut(new Logger());
+            Console.SetOut(logger);
             Console.WriteLine("Initializing launcher");
 
             InitializeComponent();
 
-            List<Profile> Profiles = AuthManager.GetProfiles(); // Retrieve profiles from authentication file
-            foreach (Profile Profile in Profiles)
-            {
-                Console.WriteLine("Found {0}", Profile.Username);
-                SelectedProfile.Items.Add(Profile.Username);
-            }
-            SelectedProfile.Items.Add("Add new profile");
+            AuthManager = new AuthManager(this);
+
+            Dictionary<string,Profile> Profiles = AuthManager.GetProfiles(); // Retrieve profiles from authentication file
+            RefreshProfileList();
+
+            Starting = false;
+            Console.WriteLine("Initialised");
         }
 
         public void AddProfile(String username, String password)
         {
             AuthManager.AuthenticateNewProfile(username, password);
-        }
-
-        private void selectedProfile_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (SelectedProfile.SelectedItem.Equals("Add new profile"))
-            {
-                AddProfileWindow addProfileWindow = new AddProfileWindow(this);
-                addProfileWindow.ShowDialog();
-                SelectedProfile.Items.Clear();
-                foreach (Profile profile in AuthManager.AuthenticationDb.Profiles)
-                {
-                    SelectedProfile.Items.Add(profile.Username);
-                }
-                SelectedProfile.Items.Add("Add new profile");
-            }
         }
 
         private void TestButton_Click(object sender, EventArgs e)
@@ -74,6 +64,34 @@ namespace OrbitLauncher
                 ReleaseCapture();
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
+        }
+
+        public void RefreshProfileList()
+        {
+            SelectedProfile.Items.Clear();
+            foreach (KeyValuePair<string, Profile> Profile in AuthManager.AuthenticationDb.Profiles)
+            {
+                Console.WriteLine("Loading profile: {0}", Profile.Value.Email);
+                SelectedProfile.Items.Add(Profile.Value.Email);
+            }
+            SelectedProfile.Items.Add("Add new profile");
+
+            SelectedProfile.Text = "Add new profile";
+        }
+
+        private void selectedProfile_SelectionChangeCommited(object sender, EventArgs e)
+        {
+            if (SelectedProfile.SelectedItem.Equals("Add new profile"))
+            {
+                AddProfileWindow addProfileWindow = new AddProfileWindow(this);
+                addProfileWindow.ShowDialog();
+
+            }
+        }
+
+        private void launchButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

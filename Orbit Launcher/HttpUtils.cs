@@ -6,112 +6,38 @@ using System.Net;
 using System.Windows.Forms;
 using System.IO;
 using System.Threading.Tasks;
-
-public enum HttpVerb
-{
-    GET,
-    POST,
-    PUT,
-    DELETE
-}
+using System.Net.Http;
 
 namespace HttpUtils
 {
+    public static class StatusCode
+    {
+        public static string OK = "OK";
+        public static string GENERAL_FAILURE = "GENERAL_FAILURE";
+        public static string INVALID_CREDENTIALS = "INVALID_CREDENTIALS";
+        public static string STALE_SESSION = "STALE_SESSION";
+    }
+
     class RestClient
     {
-        public string EndPoint { get; set; }
-        public HttpVerb Method { get; set; }
-        public string ContentType { get; set; }
-        public string PostData { get; set; }
+        enum StatusCode {OK, GENERAL_FAILURE, INVALID_CREDENTIALS, STALE_SESSION};
 
-        public RestClient()
+
+        public async Task<string> MakeRequestAsync(String endpoint, Dictionary<string,string> values)
         {
-            EndPoint = "";
-            Method = HttpVerb.GET;
-            ContentType = "text/xml";
-            PostData = "";
-        }
-        public RestClient(string endpoint)
-        {
-            EndPoint = endpoint;
-            Method = HttpVerb.GET;
-            ContentType = "text/xml";
-            PostData = "";
-        }
-        public RestClient(string endpoint, HttpVerb method)
-        {
-            EndPoint = endpoint;
-            Method = method;
-            ContentType = "text/xml";
-            PostData = "";
-        }
+            var responseString = "";
 
-        public RestClient(string endpoint, HttpVerb method, string postData)
-        {
-            EndPoint = endpoint;
-            Method = method;
-            ContentType = "application/json";
-            PostData = postData;
-        }
-
-
-        public string MakeRequest()
-        {
-            return MakeRequest("");
-        }
-
-        public string MakeRequest(string parameters)
-        {
-            var request = (HttpWebRequest)WebRequest.Create(EndPoint + parameters);
-
-            request.Method = Method.ToString();
-            request.ContentLength = 0;
-            request.ContentType = ContentType;
-
-            if (!string.IsNullOrEmpty(PostData) && Method == HttpVerb.POST)
-            {
-                var encoding = new UTF8Encoding();
-                var bytes = Encoding.GetEncoding("iso-8859-1").GetBytes(PostData);
-                request.ContentLength = bytes.Length;
-
-                using (var writeStream = request.GetRequestStream())
-                {
-                    writeStream.Write(bytes, 0, bytes.Length);
-                }
-            }
-
-            var responseValue = string.Empty;
-
-            try
+            using (var client = new HttpClient())
             {
 
-                using (var response = (HttpWebResponse)request.GetResponse())
-                {
+                var content = new FormUrlEncodedContent(values);
 
-                    if (response.StatusCode != HttpStatusCode.OK)
-                    {
-                        var message = String.Format("Request failed. Received HTTP {0}", response.StatusCode);
-                        throw new ApplicationException(message);
-                    }
+                var response = await client.PostAsync(endpoint, content);
 
-                    // grab the response
-                    using (var responseStream = response.GetResponseStream())
-                    {
-                        if (responseStream != null)
-                            using (var reader = new StreamReader(responseStream))
-                            {
-                                responseValue = reader.ReadToEnd();
-                            }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-                Console.WriteLine(e.StackTrace);
+                responseString = await response.Content.ReadAsStringAsync();
             }
 
-            return responseValue;
+            return responseString;
         }
 
     } // class

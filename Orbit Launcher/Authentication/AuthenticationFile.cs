@@ -11,6 +11,6 @@ namespace OrbitLauncher.Authentication
 
         public string ClientToken { get; set; }
         public string SelectedProfile { get; set; }
-        public List<Profile> Profiles { get; set; }
+        public Dictionary<String, Profile> Profiles { get; set; }
     }
 }

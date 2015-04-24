@@ -12,5 +12,11 @@ namespace OrbitLauncher
     class Lib
     {
         static public string AUTHENTICATION_FILE_LOCATION = "Celant Interactive\\Orbit Launcher\\authentication.json";
+        static public string CARDINAL_SERVER = @"http://localhost:8080";
+        public static string API_LOGIN = CARDINAL_SERVER + "/login";
+        public static string API_REFRESH = CARDINAL_SERVER + "/refresh";
+        public static string API_VALIDATE = CARDINAL_SERVER + "/validate";
+        public static string API_LOGOUT = CARDINAL_SERVER + "/logout";
+        public static string API_INVALIDATE = CARDINAL_SERVER + "/invalidate";
     }
 }

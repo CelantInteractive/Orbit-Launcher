@@ -30,11 +30,11 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.SelectedProfile = new System.Windows.Forms.ComboBox();
             this.launchButton = new System.Windows.Forms.Button();
             this.TestButton = new System.Windows.Forms.Button();
-            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.SuspendLayout();
@@ -63,6 +63,19 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "News";
             // 
+            // webBrowser1
+            // 
+            this.webBrowser1.AllowNavigation = false;
+            this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webBrowser1.Location = new System.Drawing.Point(3, 3);
+            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.ScriptErrorsSuppressed = true;
+            this.webBrowser1.Size = new System.Drawing.Size(767, 489);
+            this.webBrowser1.TabIndex = 0;
+            this.webBrowser1.Url = new System.Uri("http://orbitupdates.tumblr.com/", System.UriKind.Absolute);
+            this.webBrowser1.WebBrowserShortcutsEnabled = false;
+            // 
             // tabPage2
             // 
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
@@ -76,13 +89,13 @@
             // SelectedProfile
             // 
             this.SelectedProfile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SelectedProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.SelectedProfile.FormattingEnabled = true;
-            this.SelectedProfile.Location = new System.Drawing.Point(587, 561);
+            this.SelectedProfile.Location = new System.Drawing.Point(540, 561);
             this.SelectedProfile.Name = "SelectedProfile";
-            this.SelectedProfile.Size = new System.Drawing.Size(121, 21);
+            this.SelectedProfile.Size = new System.Drawing.Size(168, 21);
             this.SelectedProfile.TabIndex = 1;
-            this.SelectedProfile.Text = "Select profile";
-            this.SelectedProfile.SelectedIndexChanged += new System.EventHandler(this.selectedProfile_SelectedIndexChanged);
+            this.SelectedProfile.SelectionChangeCommitted += new System.EventHandler(this.selectedProfile_SelectionChangeCommited);
             // 
             // launchButton
             // 
@@ -93,6 +106,7 @@
             this.launchButton.TabIndex = 2;
             this.launchButton.Text = "Launch";
             this.launchButton.UseVisualStyleBackColor = true;
+            this.launchButton.Click += new System.EventHandler(this.launchButton_Click);
             // 
             // TestButton
             // 
@@ -105,19 +119,6 @@
             this.TestButton.Text = "Test Button";
             this.TestButton.UseVisualStyleBackColor = true;
             this.TestButton.Click += new System.EventHandler(this.TestButton_Click);
-            // 
-            // webBrowser1
-            // 
-            this.webBrowser1.AllowNavigation = false;
-            this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webBrowser1.Location = new System.Drawing.Point(3, 3);
-            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.ScriptErrorsSuppressed = true;
-            this.webBrowser1.Size = new System.Drawing.Size(767, 489);
-            this.webBrowser1.TabIndex = 0;
-            this.webBrowser1.Url = new System.Uri("http://orbitupdates.tumblr.com/", System.UriKind.Absolute);
-            this.webBrowser1.WebBrowserShortcutsEnabled = false;
             // 
             // Main
             // 

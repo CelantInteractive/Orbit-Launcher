@@ -9,6 +9,6 @@ namespace OrbitLauncher.Authentication
     class ResponseFrame
     {
         public String statusCode { get; set; }
-        public String statusMessage { get; set; }
+        public String uniqueSupport { get; set; }
     }
 }

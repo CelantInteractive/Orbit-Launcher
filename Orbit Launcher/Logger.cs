@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OrbitLauncher
 {
-    class Logger : TextWriter
+    public class Logger : TextWriter
     {
         private TextWriter originalOut;
         private FileStream ostrm;

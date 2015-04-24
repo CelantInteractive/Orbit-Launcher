@@ -17,6 +17,7 @@ namespace OrbitLauncher
         {
             InitializeComponent();
             this.ParentClass = parent;
+            Console.SetOut(Main.logger);
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
@@ -27,6 +28,8 @@ namespace OrbitLauncher
         private void addProfileButton_Click(object sender, EventArgs e)
         {
             addProfileButton.Enabled = false;
+            
+            Console.WriteLine("Attempting to authenticate new profile");
             ParentClass.AddProfile(emailBox.Text, passwordBox.Text);
             this.Close();
         }
