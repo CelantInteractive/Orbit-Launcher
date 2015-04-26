@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using System.Windows.Controls;
 using System.Runtime.InteropServices;
 using OrbitLauncher.Authentication;
+using Newtonsoft.Json;
 
 namespace OrbitLauncher
 {
@@ -36,6 +37,8 @@ namespace OrbitLauncher
             Console.SetOut(logger);
             Console.WriteLine("Initializing launcher");
 
+            CheckForUpdates();
+
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
             InitializeComponent();
@@ -47,6 +50,38 @@ namespace OrbitLauncher
 
             Starting = false;
             Console.WriteLine("Initialised");
+        }
+
+        private async void CheckForUpdates()
+        {
+            RestClient client = new RestClient();
+            String remoteVersion = await client.GetRemoteVersionNumber();
+            String localVersion = "";
+
+            if (!File.Exists(Lib.VERSION_FILE_LOCATION))
+            {
+                File.WriteAllText(Lib.VERSION_FILE_LOCATION, JsonConvert.SerializeObject(new Dictionary<string, string>(), Formatting.Indented));
+            }
+            else
+            {
+                Dictionary<string, string> contents = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(Lib.VERSION_FILE_LOCATION));
+                if (contents.Count > 0)
+                {
+                   contents.TryGetValue("version", out localVersion);
+                }
+            }
+
+            if (localVersion.Length > 5 && remoteVersion.Length > 5)
+            {
+
+            }
+            
+        }
+
+        private async void RetrieveUpdates()
+        {
+            RestClient client = new RestClient();
+
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

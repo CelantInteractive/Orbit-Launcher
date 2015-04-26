@@ -95,6 +95,7 @@
     </Compile>
     <Compile Include="Authentication\ResponseFrame.cs" />
     <Compile Include="Authentication\ResponseLogin.cs" />
+    <Compile Include="Authentication\ResponseVersion.cs" />
     <Compile Include="HttpUtils.cs" />
     <Compile Include="Authentication\AuthenticationFile.cs" />
     <Compile Include="Authentication\Profile.cs" />

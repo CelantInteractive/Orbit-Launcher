@@ -5,20 +5,21 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{DEB71A4B-F694-4787-AD4E-6AB1D526148A}
+AppId={{124E97EB-1414-46AB-BDFF-FBCE87DF2E41}
 AppName=Orbit Launcher
-AppVersion=1429908887
+AppVersion=0.1
 ;AppVerName=Orbit Launcher 1429908887
 AppPublisher=Celant Interactive Ltd.
 AppPublisherURL=http://celantinteractive.com/
 AppSupportURL=http://celantinteractive.com/
 AppUpdatesURL=http://celantinteractive.com/
-DefaultDirName={pf}\Orbit Launcher
+DefaultDirName={pf}\Orbit Launcddddher
 DefaultGroupName=Orbit Launcher
 AllowNoIcons=yes
 OutputBaseFilename=setup
 Compression=lzma
 SolidCompression=yes
+UsePreviousAppDir=yes
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
