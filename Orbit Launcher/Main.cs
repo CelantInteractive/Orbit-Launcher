@@ -32,16 +32,26 @@ namespace OrbitLauncher
 
         AuthManager AuthManager;
 
-        public Main()
+        public Main(String[] args)
         {
             Console.SetOut(logger);
             Console.WriteLine("Initializing launcher");
+            if (args.Length != 0)
+            {
+                Console.WriteLine(args[0]);
+                Console.WriteLine(args[1]);
+                Console.WriteLine(args[2]);
+                Console.WriteLine(args[3]);
+            }
 
-            CheckForUpdates();
+            InitializeComponent();
 
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
-            InitializeComponent();
+            RestClient client = new RestClient();
+            Lib.CARDINAL_SERVER = client.GetRequest(Lib.API_LOADBALANCE, Lib.CARDINAL_BALANCER);
+
+            CheckForUpdates();
 
             AuthManager = new AuthManager(this);
 
@@ -52,35 +62,84 @@ namespace OrbitLauncher
             Console.WriteLine("Initialised");
         }
 
-        private async void CheckForUpdates()
+        public string ScrubInput(string s)
+        {
+            //TODO: Scrub input of nasties
+            return s;
+        }
+
+        private void CheckForUpdates()
         {
             RestClient client = new RestClient();
-            String remoteVersion = await client.GetRemoteVersionNumber();
-            String localVersion = "";
 
-            if (!File.Exists(Lib.VERSION_FILE_LOCATION))
+            String versionFileLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Lib.VERSION_FILE_LOCATION);
+
+            String tempLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Lib.TEMP_LOCATION);
+
+            String version = "";
+
+            if (File.Exists(tempLocation + ".update"))
             {
-                File.WriteAllText(Lib.VERSION_FILE_LOCATION, JsonConvert.SerializeObject(new Dictionary<string, string>(), Formatting.Indented));
+                String FileContents = File.ReadAllText(tempLocation + ".update");
+                Dictionary<string, string> UpdateFileContents = JsonConvert.DeserializeObject<Dictionary<string, string>>(FileContents);
+                if (UpdateFileContents.Count > 0)
+                {
+                    UpdateFileContents.TryGetValue("version", out version);
+                    File.WriteAllText(versionFileLocation, JsonConvert.SerializeObject(UpdateFileContents, Formatting.Indented));
+                }
+                File.Delete(tempLocation + ".update");
+            }
+
+            String remoteVersion = client.GetRemoteVersionNumber();
+            String localVersion = "0";
+            Dictionary<string, string> RemoteVersionDict = new Dictionary<string, string>();
+            RemoteVersionDict.Add("version", remoteVersion);
+
+            if (!File.Exists(versionFileLocation))
+            {
+                File.WriteAllText(versionFileLocation, JsonConvert.SerializeObject(new Dictionary<string, string>() { { "version", "1431371514" } }, Formatting.Indented));
             }
             else
             {
-                Dictionary<string, string> contents = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(Lib.VERSION_FILE_LOCATION));
+                Dictionary<string, string> contents = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(versionFileLocation));
                 if (contents.Count > 0)
                 {
                    contents.TryGetValue("version", out localVersion);
                 }
             }
 
-            if (localVersion.Length > 5 && remoteVersion.Length > 5)
+            if (Int64.Parse(localVersion) < Int64.Parse(remoteVersion))
             {
-
+                RetrieveUpdates(RemoteVersionDict);
             }
             
         }
 
-        private async void RetrieveUpdates()
+        private async void RetrieveUpdates(Dictionary<string,string> ver)
         {
+            MessageBox.Show("The application will now prepare to update", "Update Required");
             RestClient client = new RestClient();
+            this.Enabled = false;
+            await client.DownloadInstaller();
+
+
+            Process process = new Process();
+            // Configure the process using the StartInfo properties.
+            process.StartInfo.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Lib.TEMP_INSTALLER_LOCATION);
+            process.StartInfo.Arguments = "/SILENT /NOCANCEL /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS";
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
+
+            String tempLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Lib.TEMP_LOCATION);
+
+            File.WriteAllText(tempLocation + ".update", JsonConvert.SerializeObject(ver, Formatting.Indented));
+
+            process.Start();
+            process.WaitForExit();
+            if (process.ExitCode != 0)
+            {
+                File.Delete(tempLocation + ".update");
+            }
+            Application.Exit();
 
         }
 
@@ -150,7 +209,7 @@ namespace OrbitLauncher
 
         private void launchButton_Click(object sender, EventArgs e)
         {
-
+            MessageBox.Show("I got an update!");
         }
     }
 }

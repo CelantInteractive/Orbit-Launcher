@@ -49,6 +49,7 @@
             this.passwordBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.passwordBox.Location = new System.Drawing.Point(75, 77);
             this.passwordBox.Name = "passwordBox";
+            this.passwordBox.PasswordChar = '*';
             this.passwordBox.Size = new System.Drawing.Size(242, 20);
             this.passwordBox.TabIndex = 1;
             // 

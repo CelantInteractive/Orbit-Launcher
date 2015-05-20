@@ -8,6 +8,6 @@ namespace OrbitLauncher.Authentication
 {
     class ResponseVersion : ResponseFrame
     {
-        public String versionNumber { get; set; }
+        public String latestVersion { get; set; }
     }
 }

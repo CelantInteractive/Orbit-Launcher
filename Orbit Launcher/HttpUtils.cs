@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Net;
@@ -31,6 +32,8 @@ namespace OrbitLauncher
 
             using (var client = new HttpClient())
             {
+                client.Timeout = new TimeSpan(0, 0, 5);
+                client.BaseAddress = new Uri(Lib.CARDINAL_SERVER);
 
                 var content = new FormUrlEncodedContent(values);
 
@@ -42,30 +45,92 @@ namespace OrbitLauncher
             return responseString;
         }
 
-        public async Task<string> GetRemoteVersionNumber()
+        public String GetRequest(String endpoint)
+        {
+            return GetRequest(endpoint, "");
+        }
+
+        public String GetRequest(String endpoint, String baseaddress)
         {
             String ret = "";
-
-            using (var client = new HttpClient())
+            try
             {
-                HttpResponseMessage response = await client.GetAsync(Lib.API_UPDATES_GETLATESTVERSION);
-                if (response.IsSuccessStatusCode)
+                using (var client = new HttpClient())
                 {
-                    String versionResp = await response.Content.ReadAsStringAsync();
+                    client.Timeout = new TimeSpan(0, 0, 5);
 
-                    ResponseVersion version = JsonConvert.DeserializeObject<ResponseVersion>(versionResp);
-                    ret = version.versionNumber;
+                    if (baseaddress == "")
+                    {
+                        client.BaseAddress = new Uri(Lib.CARDINAL_SERVER);
+                    }
+                    else
+                    {
+                        client.BaseAddress = new Uri(baseaddress);
+                    }
+
+                    HttpResponseMessage HttpResponse = client.GetAsync(endpoint).Result;
+
+                    if (HttpResponse.IsSuccessStatusCode)
+                    {
+                        HttpContent ResponseContent = HttpResponse.Content;
+                        String Response = ResponseContent.ReadAsStringAsync().Result;
+                        if (Response != null & Response != "")
+                        {
+                            ret = Response;
+                        }
+                    }
                 }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Could not contact Cardinal account servers", "Connection Error");
+                Process currentProcess = Process.GetCurrentProcess();
+
+                currentProcess.Kill();
+
             }
 
             return ret;
         }
 
-        public async Task<string> DownloadInstaller()
+        public string GetRemoteVersionNumber()
+        {
+            String ret = "";
+
+            String versionResp = GetRequest(Lib.API_UPDATES_GETLATESTVERSION);
+
+            ResponseVersion version = JsonConvert.DeserializeObject<ResponseVersion>(versionResp);
+            if (version.latestVersion != "")
+            {
+                ret = version.latestVersion;
+            }
+            else
+            {
+                ret = "0";
+            }
+
+            return ret;
+        }
+
+        public async Task DownloadInstaller()
         {
             using (var client = new HttpClient())
             {
-                client.Get
+                client.Timeout = new TimeSpan(0, 0, 5);
+                client.BaseAddress = new Uri(Lib.CARDINAL_SERVER);
+
+                using (var request = new HttpRequestMessage(HttpMethod.Get, Lib.API_UPDATES_GETINSTALLER))
+                {
+                    Stream contentStream = await (await client.SendAsync(request)).Content.ReadAsStreamAsync();
+
+                    String exeLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Lib.TEMP_INSTALLER_LOCATION);
+
+                    var stream = new FileStream(exeLocation, FileMode.Create, FileAccess.Write, FileShare.None, 4096, true);
+
+                    await contentStream.CopyToAsync(stream);
+
+                    stream.Close();
+                }
             }
         }
 

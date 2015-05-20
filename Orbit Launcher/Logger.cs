@@ -18,8 +18,9 @@ namespace OrbitLauncher
             originalOut = Console.Out;
             try
             {
-                Directory.CreateDirectory(".//log//");
-                ostrm = new FileStream(".//log//latest.txt", FileMode.Create, FileAccess.Write);
+                var LogFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Celant Interactive\\Orbit Launcher\\log\\");
+                Directory.CreateDirectory(LogFolder);
+                ostrm = new FileStream(LogFolder + "latest.txt", FileMode.Create, FileAccess.Write);
                 writer = new StreamWriter(ostrm);
             }
             catch (Exception e)

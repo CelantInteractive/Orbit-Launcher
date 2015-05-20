@@ -13,13 +13,19 @@ namespace OrbitLauncher
     {
         static public string AUTHENTICATION_FILE_LOCATION = "Celant Interactive\\Orbit Launcher\\authentication.json";
         static public string VERSION_FILE_LOCATION = "Celant Interactive\\Orbit Launcher\\version.json";
-        static public string CARDINAL_SERVER = @"http://localhost:8080";
-        public static string API_LOGIN = CARDINAL_SERVER + "/login";
-        public static string API_REFRESH = CARDINAL_SERVER + "/refresh";
-        public static string API_VALIDATE = CARDINAL_SERVER + "/validate";
-        public static string API_LOGOUT = CARDINAL_SERVER + "/logout";
-        public static string API_INVALIDATE = CARDINAL_SERVER + "/invalidate";
-        public static string API_UPDATES_GETLATESTVERSION = CARDINAL_SERVER + "/updates/getLatestVersion";
-        public static string API_UPDATES_GETINSTALLER = CARDINAL_SERVER + "/updates/getInstaller";
+        static public string TEMP_INSTALLER_LOCATION = "Celant Interactive\\Orbit Launcher\\setup.exe";
+        static public string TEMP_LOCATION = "Celant Interactive\\Orbit Launcher\\";
+
+        static public string CARDINAL_BALANCER = @"http://cardinal.celantinteractive.com";
+        static public string CARDINAL_SERVER { get; set; }
+
+        public static string API_LOGIN = "/login";
+        public static string API_REFRESH = "/refresh";
+        public static string API_VALIDATE = "/validate";
+        public static string API_LOGOUT = "/logout";
+        public static string API_INVALIDATE = "/invalidate";
+        public static string API_UPDATES_GETLATESTVERSION = "/updates/getLatestVersion";
+        public static string API_UPDATES_GETINSTALLER = "/updates/getInstaller";
+        public static string API_LOADBALANCE = "/loadbalance";
     }
 }

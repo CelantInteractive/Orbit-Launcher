@@ -13,13 +13,22 @@ AppPublisher=Celant Interactive Ltd.
 AppPublisherURL=http://celantinteractive.com/
 AppSupportURL=http://celantinteractive.com/
 AppUpdatesURL=http://celantinteractive.com/
-DefaultDirName={pf}\Orbit Launcddddher
+DefaultDirName={pf}\Orbit Launcher
 DefaultGroupName=Orbit Launcher
 AllowNoIcons=yes
 OutputBaseFilename=setup
 Compression=lzma
 SolidCompression=yes
 UsePreviousAppDir=yes
+
+[Registry]
+Root: HKCR; Subkey: "cardinal"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "cardinal"; ValueType: string; ValueData: "URL:Cardinal Authentication"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "cardinal"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Flags: uninsdeletekey
+Root: HKCR; Subkey: "cardinal\shell"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "cardinal\shell\open"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "cardinal\shell\open\command"; ValueType: string; ValueData: """{app}\Orbit Launcher.exe"" ""%1"""; Flags: uninsdeletekey
+Root: HKCR; Subkey: "cardinal\DefaultIcon"; ValueType: string; ValueData: "alert.exe,1"; Flags: uninsdeletekey
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -40,5 +49,5 @@ Name: "{group}\{cm:UninstallProgram,Orbit Launcher}"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\Orbit Launcher"; Filename: "{app}\Orbit Launcher.exe"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\Orbit Launcher.exe"; Description: "{cm:LaunchProgram,Orbit Launcher}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\Orbit Launcher.exe"; Description: "{cm:LaunchProgram,Orbit Launcher}"; Flags: nowait postinstall
 

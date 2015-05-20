@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Utilities;
 
 using OrbitLauncher.Authentication;
-using HttpUtils;
 
 namespace OrbitLauncher
 {
