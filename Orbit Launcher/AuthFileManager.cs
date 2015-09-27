@@ -11,7 +11,7 @@ using OrbitLauncher.Authentication;
 
 namespace OrbitLauncher
 {
-    class Json
+    class AuthFileManager
     {
         public static void CreateNewAuthenticationFile(string filePath, AuthenticationFile authFile)
         {
@@ -38,7 +38,7 @@ namespace OrbitLauncher
                     AuthenticationFile NewAuthenticationFile = new AuthenticationFile();
                     NewAuthenticationFile.Profiles = new Dictionary<String, Profile>();
 
-                    Json.CreateNewAuthenticationFile(AuthenticationFilePath, NewAuthenticationFile);
+                    AuthFileManager.CreateNewAuthenticationFile(AuthenticationFilePath, NewAuthenticationFile);
                 }
 
                 String FileContents = File.ReadAllText(AuthenticationFilePath);

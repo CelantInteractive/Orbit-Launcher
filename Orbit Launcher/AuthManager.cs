@@ -35,7 +35,7 @@ namespace OrbitLauncher
         /// <returns>List of profiles</returns>
         public Dictionary<String,Profile> GetProfiles()
         {
-            AuthenticationDb = Json.RetrieveAuthenticationData();
+            AuthenticationDb = AuthFileManager.RetrieveAuthenticationData();
 
             return AuthenticationDb.Profiles;
         }
@@ -54,7 +54,7 @@ namespace OrbitLauncher
         {
             var AuthenticationFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Lib.AUTHENTICATION_FILE_LOCATION); // Location of Authentication file
 
-            Json.WriteAuthenticationToFile(AuthenticationFilePath, this.AuthenticationDb);
+            AuthFileManager.WriteAuthenticationToFile(AuthenticationFilePath, this.AuthenticationDb);
         }
 
         public async void AuthenticateNewProfile(string email, string password)

@@ -99,7 +99,7 @@
     <Compile Include="HttpUtils.cs" />
     <Compile Include="Authentication\AuthenticationFile.cs" />
     <Compile Include="Authentication\Profile.cs" />
-    <Compile Include="Json.cs" />
+    <Compile Include="AuthFileManager.cs" />
     <Compile Include="Lib.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Main.cs">
